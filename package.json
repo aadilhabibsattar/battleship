@@ -8,9 +8,9 @@
         "test": "jest"
     },
     "jest": {
-      "transform": {
-        "^.+\\.js$": "babel-jest"
-      }
+        "transform": {
+            "^.+\\.js$": "babel-jest"
+        }
     },
     "keywords": [],
     "author": "",

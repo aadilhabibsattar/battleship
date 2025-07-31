@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+
+:root {
+    --primaryColor: hsl(211, 53%, 17%);
+    --secondaryColor: hsl(211, 53%, 27%);
+    --lightColor: hsl(211, 53%, 37%);
+    --yellowColor: hsl(45, 93%, 73%);
+    --whiteColor: hsl(0, 0%, 88%);
+    --shipColor: hsl(24, 2%, 41%);
+    --hitColor: #e63946;
+    --missColor: #c2c2c2;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    font-family: "Bebas Neue", system-ui;
+    background-color: var(--primaryColor);
+    color: var(--whiteColor);
+}
+
+.title-container {
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h2 {
+    font-size: 3rem;
+}
+
+h3 {
+    font-size: 2.5rem;
+}
+
+.game-container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100vw;
+    height: 90vh;
+}
+
+.player-1-div,
+.player-2-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+}
+
+.player-1-gameboard,
+.player-2-gameboard {
+    display: grid;
+    grid-template-rows: repeat(10, 3vw);
+    grid-template-columns: repeat(10, 3vw);
+    padding: 4px;
+    gap: 3px;
+    border: 2px solid var(--secondaryColor);
+}
+
+.cell {
+    border: 1px solid var(--primaryColor);
+    border-radius: 0.2rem;
+    background-color: var(--secondaryColor);
+    width: 3vw;
+    height: 3vw;
+}
+
+.player-2-gameboard > .cell:hover {
+    background-color: var(--lightColor);
+    cursor: pointer;
+}
+
+.ship {
+    background-color: var(--shipColor);
+    border: 1px solid hsl(24, 10%, 50%);
+}
