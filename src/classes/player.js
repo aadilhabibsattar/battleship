@@ -27,9 +27,14 @@ export class Player {
 }
 
 export class Computer extends Player {
+    constructor() {
+        super();
+        this.previousAttacks = new Set();
+    }
+
     generateShipPosition() {
         let x = Math.floor(10 * Math.random());
-        let y = Math.floor(9 * Math.random());
+        let y = Math.floor(10 * Math.random());
         let orientation = Math.random() < 0.5 ? "horizontal" : "vertical";
 
         return [[x, y], orientation];
@@ -46,5 +51,18 @@ export class Computer extends Player {
                 } catch {}
             }
         }
+    }
+
+    attack() {
+        let key, x, y;
+
+        do {
+            x = Math.floor(Math.random() * 10);
+            y = Math.floor(Math.random() * 10);
+            key = `${x},${y}`;
+        } while (this.previousAttacks.has(key));
+
+        this.previousAttacks.add(key);
+        return [x, y];
     }
 }

@@ -8,7 +8,6 @@
     --whiteColor: hsl(0, 0%, 88%);
     --shipColor: hsl(24, 2%, 41%);
     --hitColor: #e63946;
-    --missColor: #c2c2c2;
 }
 
 * {
@@ -41,7 +40,7 @@ h2 {
 }
 
 h3 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 
 .game-container {
@@ -72,18 +71,27 @@ h3 {
 
 .cell {
     border: 1px solid var(--primaryColor);
-    border-radius: 0.2rem;
     background-color: var(--secondaryColor);
+    border-radius: 0.2rem;
     width: 3vw;
     height: 3vw;
 }
 
 .player-2-gameboard > .cell:hover {
     background-color: var(--lightColor);
+    border: none;
     cursor: pointer;
 }
 
 .ship {
     background-color: var(--shipColor);
-    border: 1px solid hsl(24, 10%, 50%);
+}
+
+.hit {
+    background-color: var(--hitColor);
+    border: none;
+}
+
+.miss {
+    opacity: 0.3;
 }
