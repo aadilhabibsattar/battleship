@@ -12,7 +12,6 @@ human.placeShips();
 computer.placeShips();
 
 human.gameboard.renderShips(".player-1-gameboard");
-// computer.gameboard.renderShips(".player-2-gameboard");
 
 const player2Cells = document.querySelectorAll(".player-2-gameboard > .cell");
 player2Cells.forEach((cell) => {
@@ -45,3 +44,13 @@ function computerAttack() {
         attackedCell.classList.add("miss");
     }
 }
+
+const randomizeButton = document.querySelector(".randomize-button");
+randomizeButton.addEventListener("click", () => {
+    human.gameboard.clearShips(".player-1-gameboard");
+    human.placeShips();
+    human.gameboard.renderShips(".player-1-gameboard");
+});
+
+human.renderShipStatus(document.querySelector(".player-1-ship-list"));
+computer.renderShipStatus(document.querySelector(".player-2-ship-list"));

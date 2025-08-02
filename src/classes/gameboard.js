@@ -5,6 +5,7 @@ export class Gameboard {
         this.size = [10, 10];
         this.ships = [];
         this.missedShotCoordinates = [];
+        this.shipCounter = 0;
     }
 
     isWithinBounds(x, y) {
@@ -34,7 +35,8 @@ export class Gameboard {
 
         const ship = new Ship(length);
         const hitCoordinates = [];
-        this.ships.push({ ship, coordinates, hitCoordinates });
+        const shipId = `ship-${this.shipCounter++}`;
+        this.ships.push({ ship, coordinates, hitCoordinates, shipId });
     }
 
     receiveAttack([x, y]) {
@@ -79,19 +81,45 @@ export class Gameboard {
 
     renderShips(containerSelector) {
         const container = document.querySelector(containerSelector);
-        container
-            .querySelectorAll(".cell")
-            .forEach((cell) => cell.classList.remove("ship"));
+        container.querySelectorAll(".cell").forEach((cell) => {
+            cell.classList.remove("ship");
+            cell.removeAttribute("data-ship-id");
+        });
 
-        this.ships.forEach(({ coordinates }) => {
+        const colors = [
+            "#979797ff",
+            "#634b4bff",
+            "#a7804bff",
+            "#979024ff",
+            "#5b5b7cff",
+            "#2a7377ff",
+            "#58a1adff",
+        ];
+
+        this.ships.forEach(({ coordinates, shipId }, index) => {
+            const color = colors[index % colors.length];
+
             coordinates.forEach(([x, y]) => {
                 const cell = container.querySelector(
                     `.cell[data-x="${x}"][data-y="${y}"]`
                 );
                 if (cell) {
                     cell.classList.add("ship");
+                    cell.style.backgroundColor = color;
+                    cell.dataset.shipId = shipId;
                 }
             });
         });
+    }
+
+    clearShips(containerSelector) {
+        const container = document.querySelector(containerSelector);
+        container.querySelectorAll(".cell").forEach((cell) => {
+            cell.classList.remove("ship", "hit", "miss");
+            cell.style.backgroundColor = "";
+            cell.removeAttribute("data-ship-id");
+        });
+
+        this.ships = [];
     }
 }

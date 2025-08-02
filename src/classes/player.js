@@ -3,7 +3,7 @@ import { Gameboard } from "./gameboard.js";
 export class Player {
     constructor() {
         this.gameboard = new Gameboard();
-        this.shipLengths = [5, 4, 3, 2, 1];
+        this.shipLengths = [5, 4, 4, 3, 3, 2, 2];
     }
 
     placeShips() {
@@ -22,6 +22,20 @@ export class Player {
                     placed = true;
                 } catch {}
             }
+        }
+    }
+
+    renderShipStatus(container) {
+        container.innerHTML = "";
+
+        for (const length of this.shipLengths) {
+            const shipDiv = document.createElement("div");
+
+            for (let i = 0; i < length; i++) {
+                const shipSegment = document.createElement("div");
+                shipDiv.append(shipSegment);
+            }
+            container.append(shipDiv);
         }
     }
 }
