@@ -87,13 +87,13 @@ export class Gameboard {
         });
 
         const colors = [
-            "#979797ff",
+            "#bebebeff",
             "#634b4bff",
-            "#a7804bff",
-            "#979024ff",
-            "#5b5b7cff",
-            "#2a7377ff",
-            "#58a1adff",
+            "#9b904aff",
+            "#606268ff",
+            "#4a4a8aff",
+            "#5ca57aff",
+            "#3b94a3ff",
         ];
 
         this.ships.forEach(({ coordinates, shipId }, index) => {

@@ -96,10 +96,6 @@ p {
     cursor: pointer;
 }
 
-/* .ship {
-    background-color: var(--shipColor);
-} */
-
 .hit {
     background-color: var(--hitColor) !important;
     border: none;
@@ -132,18 +128,8 @@ p {
     gap: 1rem;
 }
 
-.start-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem 0rem;
-    width: 8rem;
-    font-size: 1.5rem;
-    background-color: hsl(113, 55%, 42%);
-    border-radius: 1rem;
-    cursor: pointer;
-}
-
+.new-game-button,
+.start-button,
 .randomize-button {
     display: flex;
     justify-content: center;
@@ -151,7 +137,45 @@ p {
     padding: 1rem 0rem;
     width: 8rem;
     font-size: 1.5rem;
-    background-color: #3967e6;
     border-radius: 1rem;
     cursor: pointer;
+    user-select: none;
+}
+
+.start-button {
+    background-color: hsl(113, 55%, 42%);
+}
+
+.randomize-button {
+    background-color: #3967e6;
+}
+
+.game-over-screen {
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.invisible {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.new-game-button {
+    background-color: var(--hitColor);
+    color: white;
 }
