@@ -44,6 +44,9 @@ export class Computer extends Player {
     constructor() {
         super();
         this.previousAttacks = new Set();
+        this.previousHits = [];
+        this.possibleTargets = [];
+        this.orientation = null;
     }
 
     generateShipPosition() {
@@ -68,6 +71,10 @@ export class Computer extends Player {
     }
 
     attack() {
+        if (this.possibleTargets.length > 0) {
+            return this.possibleTargets.pop();
+        }
+
         let key, x, y;
 
         do {
@@ -78,5 +85,63 @@ export class Computer extends Player {
 
         this.previousAttacks.add(key);
         return [x, y];
+    }
+
+    processAttackResult([x, y], wasHit, wasSunk) {
+        if (wasHit) {
+            this.previousHits.push([x, y]);
+
+            if (this.previousHits.length >= 2) {
+                const [first, second] = this.previousHits;
+                if (first[0] === second[0]) {
+                    this.orientation = "vertical";
+                } else if (first[1] === second[1]) {
+                    this.orientation = "horizontal";
+                }
+            }
+
+            if (!wasSunk) {
+                this.addAdjacentTargets(x, y);
+            } else {
+                this.previousHits = [];
+                this.possibleTargets = [];
+                this.orientation = null;
+            }
+        }
+    }
+
+    addAdjacentTargets(x, y) {
+        let directions;
+        if (this.orientation === "horizontal") {
+            directions = [
+                [1, 0],
+                [-1, 0],
+            ];
+        } else if (this.orientation === "vertical") {
+            directions = [
+                [0, 1],
+                [0, -1],
+            ];
+        } else {
+            directions = [
+                [1, 0],
+                [-1, 0],
+                [0, 1],
+                [0, -1],
+            ];
+        }
+
+        for (const [dx, dy] of directions) {
+            const newX = x + dx;
+            const newY = y + dy;
+
+            if (newX >= 0 && newX < 10 && newY >= 0 && newY < 10) {
+                const key = `${newX},${newY}`;
+                if (!this.previousAttacks.has(key)) {
+                    this.possibleTargets.push([newX, newY]);
+                    this.previousAttacks.add(key);
+                }
+            }
+        }
     }
 }

@@ -1,48 +1,72 @@
 import "./styles/style.css";
-
 import { Player, Computer } from "./classes/player";
+import { DOM } from "./classes/dom";
 
 const human = new Player();
 const computer = new Computer();
 
-human.gameboard.renderGrid(".player-1-gameboard");
-computer.gameboard.renderGrid(".player-2-gameboard");
+const player1ShipList = document.querySelector(".player-1-ship-list");
+const player2ShipList = document.querySelector(".player-2-ship-list");
 
-human.placeShips();
+function initialSetup() {
+    human.gameboard.renderGrid(".player-1-gameboard");
+    computer.gameboard.renderGrid(".player-2-gameboard");
 
-human.gameboard.renderShips(".player-1-gameboard");
+    human.placeShips();
+    human.gameboard.renderShips(".player-1-gameboard");
 
-const winnerMsg = document.querySelector(".winner-message");
+    dom.renderShipStatus(player1ShipList, human);
+    dom.renderShipStatus(player2ShipList, computer);
+}
 
-const player2Cells = document.querySelectorAll(".player-2-gameboard > .cell");
+function cellClickHandler(event) {
+    playTurn(event.currentTarget);
+}
+function addPlayer2Listeners() {
+    document.querySelectorAll(".player-2-gameboard > .cell").forEach((cell) => {
+        cell.removeEventListener("click", cellClickHandler);
+        cell.addEventListener("click", cellClickHandler);
+    });
+}
+
+function removePlayer2Listeners() {
+    document
+        .querySelectorAll(".player-2-gameboard > .cell")
+        .forEach((cell) => cell.removeEventListener("click", cellClickHandler));
+}
+
+function playTurn(cell) {
+    const winnerMsg = document.querySelector(".winner-message");
+
+    humanAttack(cell);
+    if (computer.gameboard.areAllShipsSunk()) {
+        dom.displayGameOver();
+        winnerMsg.textContent = "You won!";
+        removePlayer2Listeners();
+        return;
+    }
+
+    computerAttack();
+    if (human.gameboard.areAllShipsSunk()) {
+        dom.displayGameOver();
+        winnerMsg.textContent = "Computer Won!";
+        computer.gameboard.renderShips(".player-2-gameboard");
+        removePlayer2Listeners();
+        return;
+    }
+}
 
 function startGame() {
-    computer.gameboard.renderShips(".player-2-gameboard");
-    player2Cells.forEach((cell) => {
-        cell.addEventListener("click", () => {
-            const x = parseInt(cell.dataset.x);
-            const y = parseInt(cell.dataset.y);
-            const wasHit = computer.gameboard.receiveAttack([x, y]);
+    removePlayer2Listeners();
 
-            if (wasHit) {
-                cell.classList.add("hit");
-            } else {
-                cell.classList.add("miss");
-            }
+    computer.gameboard = new Computer().gameboard;
+    computer.previousAttacks.clear();
+    computer.previousHits = [];
+    computer.possibleTargets = [];
+    computer.orientation = null;
 
-            if (human.gameboard.areAllShipsSunk()) {
-                displayGameOver();
-                winnerMsg.textContent = "Computer Won!";
-                computer.gameboard.renderShips(".player-2-gameboard");
-            } else if (computer.gameboard.areAllShipsSunk()) {
-                displayGameOver();
-                winnerMsg.textContent = "You won!";
-            }
-
-            cell.style.pointerEvents = "none";
-            computerAttack();
-        });
-    });
+    computer.placeShips();
+    addPlayer2Listeners();
 }
 
 function computerAttack() {
@@ -51,47 +75,34 @@ function computerAttack() {
         `.player-1-gameboard .cell[data-x="${compX}"][data-y="${compY}"]`
     );
     const wasHit = human.gameboard.receiveAttack([compX, compY]);
+    const wasSunk = wasHit && human.gameboard.wasShipSunkAt([compX, compY]);
 
     if (wasHit) {
         attackedCell.classList.add("hit");
     } else {
         attackedCell.classList.add("miss");
     }
+
+    computer.processAttackResult([compX, compY], wasHit, wasSunk);
+    dom.renderShipStatus(player1ShipList, human);
 }
 
-const randomizeButton = document.querySelector(".randomize-button");
-randomizeButton.addEventListener("click", () => {
-    human.gameboard.clearShips(".player-1-gameboard");
-    human.placeShips();
-    human.gameboard.renderShips(".player-1-gameboard");
-});
+function humanAttack(cell) {
+    const x = parseInt(cell.dataset.x);
+    const y = parseInt(cell.dataset.y);
+    const wasHit = computer.gameboard.receiveAttack([x, y]);
 
-human.renderShipStatus(document.querySelector(".player-1-ship-list"));
-computer.renderShipStatus(document.querySelector(".player-2-ship-list"));
+    if (wasHit === null) return;
 
-const gameOverScreen = document.querySelector(".game-over-screen");
+    if (wasHit) {
+        cell.classList.add("hit");
+    } else {
+        cell.classList.add("miss");
+    }
 
-function displayGameOver() {
-    gameOverScreen.classList.remove("hidden");
+    dom.renderShipStatus(player2ShipList, computer);
 }
 
-const startButton = document.querySelector(".start-button");
-startButton.addEventListener("click", () => {
-    randomizeButton.classList.add("invisible");
-    startButton.classList.add("invisible");
-
-    computer.placeShips();
-    startGame();
-});
-
-const newGameButton = document.querySelector(".new-game-button");
-newGameButton.addEventListener("click", () => {
-    randomizeButton.classList.remove("invisible");
-    startButton.classList.remove("invisible");
-    gameOverScreen.classList.add("hidden");
-
-    human.gameboard.clearShips(".player-1-gameboard");
-    computer.gameboard.clearShips(".player-2-gameboard");
-    human.placeShips();
-    human.gameboard.renderShips(".player-1-gameboard");
-});
+const dom = new DOM(human, computer, startGame, removePlayer2Listeners);
+initialSetup();
+dom.addPageEventListeners();

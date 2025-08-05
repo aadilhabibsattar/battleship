@@ -1,4 +1,4 @@
-import { Ship } from "../src/ship.js";
+import { Ship } from "../src/classes/ship.js";
 
 describe("Ship class", () => {
     test("ship tracks hits correctly", () => {

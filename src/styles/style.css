@@ -34,6 +34,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 0.5rem;
 }
 
 h2 {
@@ -42,6 +43,7 @@ h2 {
 
 p {
     font-size: 1.5rem;
+    margin-top: 0.5rem;
 }
 
 .game-container {
@@ -105,24 +107,6 @@ p {
     opacity: 0.3;
 }
 
-.shipDiv {
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-}
-
-.shipSegment {
-    width: 1rem;
-    aspect-ratio: 1;
-    background-color: var(--shipColor);
-}
-
-.player-1-ship-list,
-.player-2-ship-list {
-    background: rgba(255, 0, 0, 0.2);
-    min-height: 50px;
-}
-
 .game-buttons {
     display: flex;
     gap: 1rem;
@@ -178,4 +162,25 @@ p {
 .new-game-button {
     background-color: var(--hitColor);
     color: white;
+}
+
+.player-1-ship-list,
+.player-2-ship-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem;
+    align-items: center;
+}
+
+.ship-div {
+    display: flex;
+    gap: 0.2rem;
+}
+
+.ship-segment {
+    width: 1rem;
+    height: 1rem;
+    background-color: var(--shipColor);
+    border-radius: 0.1rem;
 }

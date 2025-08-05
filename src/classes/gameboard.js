@@ -65,11 +65,20 @@ export class Gameboard {
         return this.ships.every(({ ship }) => ship.isSunk());
     }
 
+    wasShipSunkAt([x, y]) {
+        for (const { ship, coordinates } of this.ships) {
+            if (coordinates.some(([cx, cy]) => cx === x && cy === y)) {
+                return ship.isSunk();
+            }
+        }
+        return false;
+    }
+
     renderGrid(containerSelector) {
         const container = document.querySelector(containerSelector);
         container.innerHTML = "";
-        for (let y = 0; y < 10; y++) {
-            for (let x = 0; x < 10; x++) {
+        for (let y = 0; y < this.size[1]; y++) {
+            for (let x = 0; x < this.size[0]; x++) {
                 const cell = document.createElement("div");
                 cell.classList.add("cell");
                 cell.dataset.x = x;
